@@ -3,7 +3,7 @@ require 'test_helper'
 class ProductTest < ActiveSupport::TestCase
   fixtures :products
 
-  def new_product(image_url: 'image.png', title: 'My Book Title', description: "yyy", price: 1) 
+  def new_product(image_url: 'image.png', title: 'My Book Title', description: "Valid description", price: 1) 
     Product.new(
       title: title,
       description: description,
@@ -19,6 +19,16 @@ class ProductTest < ActiveSupport::TestCase
     assert product.errors["description"].any?
     assert product.errors["image_url"].any?
     assert product.errors["price"].any?
+  end
+
+  test "product title must be at least 10 characters" do
+    product = new_product(title: "invalid")
+    assert product.invalid?
+    assert_equal ["must be at least 10 characters"], product.errors["title"]
+
+    minimum_characters_title = "validTitle"
+    product = new_product(title: minimum_characters_title)
+    assert product.valid?, "#{minimum_characters_title} shouldn't be a invalid title"
   end
 
   # TODO: Verify how to do test.each
