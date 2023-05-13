@@ -19,7 +19,7 @@ class Cart < ApplicationRecord
     line_items.to_a.sum { |item| item.total_price }
   end
 
-  def is_empty
+  def empty?
     line_items.empty?
   end
 end
