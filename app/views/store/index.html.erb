@@ -7,7 +7,7 @@
 
 <ul class="catalog">
   
-  <% if @access_counter > 5 %>
+  <% if @access_counter && @access_counter > 5 %>
     <p> Number of <%= "access".pluralize(@access_counter) %>: <%= @access_counter %></p>
   <% end %>
   
@@ -24,7 +24,7 @@
           </p>
           <div class="price">
             <%= number_to_currency(product.price) %>
-            <%= button_to 'Add to Cart', line_items_path(product_id: product) %>
+            <%= button_to 'Add to Cart', line_items_path(product_id: product), remote: true %>
           </div>
         </li>
       <% end %>
