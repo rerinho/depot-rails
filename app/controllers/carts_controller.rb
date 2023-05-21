@@ -1,7 +1,7 @@
 class CartsController < ApplicationController
   before_action :set_cart, only: %i[ show edit update destroy ]
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
-  before_action :check_cart_is_empty, :check_cart_owner, only: %i[ show ]
+  before_action :check_cart_owner, only: %i[ show ]
 
   # GET /carts or /carts.json
   def index
@@ -81,14 +81,6 @@ class CartsController < ApplicationController
       if @cart.id != session[:cart_id]
         logger.error "Attempt to access another owner's cart #{params[:id]}"
         redirect_to store_index_url, notice: 'Does not own the cart'
-      end
-    end
-
-    def check_cart_is_empty
-      if @cart.empty?
-        respond_to do |format|
-          format.html { redirect_to store_index_url, notice: "Your cart is currently empty." }
-        end
       end
     end
 end
