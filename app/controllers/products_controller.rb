@@ -44,7 +44,8 @@ class ProductsController < ApplicationController
         format.json { render :show, status: :ok, location: @product }
 
         @products = Product.all.order(:title)
-  	    ActionCable.server.broadcast 'products', html: render_to_string('store/index', layout: false)
+        @current_product = @product
+        ActionCable.server.broadcast 'products', html: render_to_string('store/index', layout: false)
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @product.errors, status: :unprocessable_entity }
@@ -63,18 +64,19 @@ class ProductsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def product_params
-      params.require(:product).permit(:title, :description, :image_url, :price)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_product
+    @product = Product.find(params[:id])
+  end
 
-    def invalid_product
-      logger.error "Attempt to access invalid product #{params[:id]}"
-      redirect_to store_index_url, notice: 'Invalid product'
-    end
+  # Only allow a list of trusted parameters through.
+  def product_params
+    params.require(:product).permit(:title, :description, :image_url, :price)
+  end
+
+  def invalid_product
+    logger.error "Attempt to access invalid product #{params[:id]}"
+    redirect_to store_index_url, notice: 'Invalid product'
+  end
 end
