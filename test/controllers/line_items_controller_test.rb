@@ -26,17 +26,25 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_select 'td', "Programming Ruby 1.9"
   end
 
+  test "should increment line_item" do
+    post line_items_url, params: { product_id: products(:ruby).id }
+    post line_items_url, params: { product_id: products(:ruby).id }
+
+    follow_redirect!
+
+    assert_select 'td.quantity', text: "2"
+  end
 
   test "should create line_item via ajax" do
     assert_difference('LineItem.count') do
       post line_items_url, params: { product_id: products(:ruby).id },
-      xhr: true
+           xhr: true
     end
 
     assert_response :success
     assert_match /<tr class=\\"line-item-highlight/, @response.body
   end
-    
+
   test "should show line_item" do
     get line_item_url(@line_item)
     assert_response :success
@@ -53,10 +61,25 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy line_item" do
+    post line_items_url, params: { product_id: @line_item.product_id }
+
     assert_difference('LineItem.count', -1) do
       delete line_item_url(@line_item)
     end
 
-    assert_redirected_to store_index_url
+    assert_select "td.quantity", { count: 0 }
+  end
+
+  test "should decrement line_item" do
+    post line_items_url, params: { product_id: @line_item.product_id }
+    post line_items_url, params: { product_id: @line_item.product_id }
+
+    assert_difference('LineItem.last.quantity', -1) do
+      delete line_item_url(@line_item)
+    end
+
+    follow_redirect!
+
+    assert_select 'td.quantity', { count: 1, text: "1" }
   end
 end
