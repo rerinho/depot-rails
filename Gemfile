@@ -54,3 +54,5 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "net-http"
+
+gem "activemodel-serializers-xml", "~> 1.0"
