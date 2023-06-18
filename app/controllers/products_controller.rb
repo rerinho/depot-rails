@@ -63,20 +63,30 @@ class ProductsController < ApplicationController
     end
   end
 
+  def who_bought
+    @product = Product.find(params[:id])
+    @latest_order = @product.orders.order(:updated_at).last
+    if stale?(@latest_order)
+      respond_to do |format|
+        format.atom
+      end
+    end
+  end
+
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_product
-    @product = Product.find(params[:id])
-  end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_product
+      @product = Product.find(params[:id])
+    end
 
-  # Only allow a list of trusted parameters through.
-  def product_params
-    params.require(:product).permit(:title, :description, :image_url, :price)
-  end
+    # Only allow a list of trusted parameters through.
+    def product_params
+      params.require(:product).permit(:title, :description, :image_url, :price)
+    end
 
-  def invalid_product
-    logger.error "Attempt to access invalid product #{params[:id]}"
-    redirect_to store_index_url, notice: 'Invalid product'
-  end
+    def invalid_product
+      logger.error "Attempt to access invalid product #{params[:id]}"
+      redirect_to store_index_url, notice: 'Invalid product'
+    end
 end
