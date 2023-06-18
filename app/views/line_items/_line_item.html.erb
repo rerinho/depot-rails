@@ -1,12 +1,8 @@
-<% if line_item == @current_item %>
-  <tr class="line-item-highlight">
-<% else %>
-  <tr>
-<% end %>
-<td>
-  <%= button_to 'Decrement', line_item, method: :delete, remote: true %>
-</td>
-<td class="quantity"><%= line_item.quantity %></td>
-<td><%= line_item.product.title %></td>
-<td class="price"><%= number_to_currency(line_item.total_price) %></td>
+<tr class="line-item <%= "line-item-highlight" if line_item == @current_item %>">
+  <td>
+    <%= button_to 'Decrement', line_item, method: :delete, remote: true %>
+  </td>
+  <td class="quantity"><%= line_item.quantity %></td>
+  <td><%= line_item.product.title %></td>
+  <td class="price"><%= number_to_currency(line_item.total_price) %></td>
 </tr>

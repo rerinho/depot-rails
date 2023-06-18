@@ -1,2 +1,5 @@
 cart = document.getElementById("cart")
-if (cart) cart.style.display = "none"
+if (cart) cart.innerHTML = "<%= j render(@cart) %>"
+
+lineItem = document.querySelector(".line-item")
+if (!lineItem) cart.style.display = 'none'
